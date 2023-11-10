@@ -1,0 +1,73 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<link href="~/Content/StyleForClient/StyleForAccount.css" rel="stylesheet" />
+
+<section>
+    <div class="form-box">
+        <div class="form-value">
+            <form method="post" action="~/Account/Login">
+                <h2>Login</h2>
+                <div class="inputbox">
+                    <ion-icon name="person-outline"></ion-icon>
+                    <input id="username" name="username" type="text" required>
+                    <label for="">Username</label>
+                </div>
+
+                <div class="inputbox">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <input id="password" name="password" type="password" required>
+                    <label  for="">Password</label>
+                </div>
+                <div class="forget">
+                    <label for=""><input type="checkbox">Remember Me</label>
+
+                </div>
+                <button onclick="LoginCheck()" type="button" class="bsubmit">Log in</button>
+                <div class="register">
+                    <p>Don't have a account <a href="~/Account/Register">Register</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+<script>
+    function LoginCheck() {
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+        $.ajax({
+            url: "/Account/LoginCheck",
+            type: "POST",
+            data: { username: username, password: password },
+            success: function (result) {
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Login successful',
+                        showConfirmButton: false,
+                        timer: 1500
+                        
+                    });
+                    setTimeout(function () {
+                        window.location.href = '/Home/Index';
+                    }, 1000);
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: result.message
+                    });
+                }
+            },
+            error: function (error) {
+                // xử lý lỗi ở đây
+                alert(error.responseJSON.message);
+            }
+        });
+    }
+</script>

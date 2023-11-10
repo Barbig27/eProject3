@@ -1,0 +1,181 @@
+﻿@model IEnumerable<RockParadise.Models.user_order>
+@using RockParadise.Models;
+
+<style>
+    .btna {
+        background-color: #4CAF50;
+        /* Màu xanh lá cây */
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+    }
+
+    .agree {
+        background-color: #008CBA;
+        /* Màu xanh dương */
+    }
+
+    .reject {
+        background-color: #f44336;
+        /* Màu đỏ */
+    }
+
+    .deliver {
+        background-color: #ff9800;
+        /* Màu cam */
+    }
+
+    .complete {
+        background-color: #4CAF50;
+        /* Màu xanh lá cây */
+    }
+</style>
+
+
+@{
+    ViewBag.Title = "The Order";
+    Layout = "~/Views/Shared/_LayoutForAdmin.cshtml";
+}
+
+
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.account.fullname)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.account.email)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.account.address)
+        </th>
+
+
+        <th>
+            @Html.DisplayNameFor(model => model.status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderItemsJSON)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.total_price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.order_time)
+        </th>
+
+        <th>Action</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.account.fullname)
+    </td>
+
+    <td>
+        @Html.DisplayFor(modelItem => item.account.email)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.account.address)
+    </td>
+
+    <td>
+        @if (item.status == null)
+        {
+            <p>Waiting</p>
+
+        }
+        else
+        {
+            @Html.DisplayFor(modelItem => item.status)
+
+        }
+    </td>
+    <td>
+
+        @foreach (var orderItem in Json.Decode(item.OrderItemsJSON))
+        {
+            <div> Name: @orderItem.name | Price: @orderItem.price | Quantity: @orderItem.quantity </div>
+
+        }
+
+    </td>
+    <td>
+
+        @Html.DisplayFor(modelItem => item.total_price)
+        @{ 
+            float a =(float) item.total_price;
+        }
+        @a.ToString("0.##")
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.order_time)
+    </td>
+    <td>
+
+        @if (item.status == null)
+        {
+            <button onclick="chanestt(@item.id,'Agree')" class="agree btna">Agree</button>
+            <button onclick="chanestt(@item.id,'Reject')" class="reject btna">Reject</button>
+        }
+        else if (item.status.Trim() == "Agree")
+        {
+            <button onclick="chanestt(@item.id,'Deliver')" class="deliver btna">Deliver</button>
+        }
+        else if (item.status.Trim() == "Deliver")
+        {
+            <button onclick="chanestt(@item.id,'Complete')" class="complete btna">Complete</button>
+        }
+
+
+    </td>
+</tr>
+    }
+
+</table>
+<script>
+    function chanestt(idOrder, stt) {
+
+        $.ajax({
+            url: "/TheOrder/ChangeStatus",
+            type: "POST",
+            data: { idOrder: idOrder, stt: stt },
+            success: function (result) {
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1500);
+                           
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: result.message
+                    });
+                }
+            },
+            error: function (error) {
+                // xử lý lỗi ở đây
+                alert(error.responseJSON.message);
+            }
+        });
+
+    }
+       
+
+</script>

@@ -1,0 +1,132 @@
+﻿@model IEnumerable<RockParadise.Models.user_order>
+
+@{
+    ViewBag.Title = "My Purchase";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<style>
+   
+
+
+    h1 {
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th,
+    td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    td:nth-child(1) {
+        width: 20%;
+        text-align: center;
+    }
+
+    td:nth-child(2) {
+        width: 35%;
+    }
+
+    td:nth-child(3) {
+        width: 15%;
+        text-align: center;
+    }
+
+    td:nth-child(4) {
+        width: 15%;
+        text-align: center;
+    }
+
+    td:nth-child(5) {
+        width: 15%;
+        text-align: center;
+    }
+
+    .Agree {
+        background-color: #008CBA;
+        /* Màu xanh dương */
+    }
+
+    .Reject {
+        background-color: #f44336;
+        /* Màu đỏ */
+    }
+
+    .Deliver {
+        background-color: #ff9800;
+        /* Màu cam */
+    }
+
+    .Complete {
+        background-color: #4CAF50;
+        /* Màu xanh lá cây */
+    }
+
+    .btna {
+        /* Màu xanh lá cây */
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        margin: 5px;
+        width: auto;
+    }
+</style>
+
+<div class="maina">
+    <h1>Information line</h1>
+    <table>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.account.username)</th>
+            <th>@Html.DisplayNameFor(model => model.OrderItemsJSON)</th>
+            <th> @Html.DisplayNameFor(model => model.total_price)</th>
+            <th>@Html.DisplayNameFor(model => model.status)</th>
+            <th>@Html.DisplayNameFor(model => model.order_time)</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+    <tr>
+        <td>@Html.DisplayFor(modelItem => item.account.username)</td>
+        <td>
+            @foreach (var orderItem in Json.Decode(item.OrderItemsJSON))
+            {
+                <div> Name: @orderItem.name <br> Price: @orderItem.price <br /> Quantity: @orderItem.quantity </div>
+
+            }
+
+        </td>
+        <td>
+            @{
+                float a = (float)item.total_price;
+            }
+            @a.ToString("0.##")
+        </td>
+        @if (item.status != null)
+        {
+            <td > <p class="@item.status btna">@Html.DisplayFor(modelItem => item.status) <p></td>
+        }
+        else
+        {
+            <td>Waiting</td>
+        }
+
+        <td>@Html.DisplayFor(modelItem => item.order_time)</td>
+    </tr>
+         
+        }
+        </table>
+</div>

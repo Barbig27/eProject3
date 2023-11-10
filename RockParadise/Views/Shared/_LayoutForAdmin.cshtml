@@ -1,0 +1,237 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/StyleForAdmin/fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="~/Content/StyleForAdmin/adminlte.min.css" rel="stylesheet" />
+    <link href="~/Content/StyleAdmin.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.all.min.js"></script>
+
+</head>
+
+<body class="hold-transition sidebar-mini">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link sidebarBTN" data-widget="pushmenu" href="#" ><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="~/Home" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="#" class="nav-link">Contact</a>
+                </li>
+            </ul>
+
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Navbar Search -->
+                
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="~/Account/Logout">
+                         Logout
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="~/HomeAdmin" class="brand-link">
+                <img src="https://i.imgur.com/Sf6F2XJ.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+                     style="opacity: .8">
+                <span class="brand-text font-weight-light">Rock Paradise</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="https://us.123rf.com/450wm/anatolir/anatolir2011/anatolir201105528/159470802-jurist-avatar-icon-flat-style.jpg?ver=6" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info">
+                        <a href="#" class="d-block">@Session["Username"]</a>
+                    </div>
+                </div>
+
+                <!-- SidebarSearch Form -->
+                <div class="form-inline">
+                    <div class="input-group" data-widget="sidebar-search">
+                        <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-sidebar">
+                                <i class="fas fa-search fa-fw"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <!-- Add icons to the links using the .nav-icon class
+    with font-awesome or any other icon font library -->
+                        <li class="nav-item">
+                            <a href="~/HomeAdmin" class="nav-link">
+                                <i class="fa-solid fa-gauge nav-icon"></i>
+                                <p>
+                                    Dashboard
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="~/TheOrder" class="nav-link">
+                                <i class="fa-solid fa-cart-shopping nav-icon"></i>
+                                <p>
+                                    The Order
+
+                                    <span style="background-color:red;" class="badge badge-info right"></span>
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="~/AccountManagement" class="nav-link">
+
+                                <i class="fa-solid fa-user nav-icon"></i>
+                                <p>
+                                    Account Management
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="~/Companies" class="nav-link">
+                                <i class="fa-solid fa-building nav-icon"></i>
+                                
+
+                                <p>
+                                    Company Manager
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item producmn">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Product Management
+                                    <i class="right fas fa-angle-left iconpmn"></i>
+                                </p>
+                            </a>
+
+                            <ul class="nav nav-treeview subproduct">
+                                <li class="nav-item">
+                                    <a href="~/ProductManagement" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>List Of Products</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="~/ProductManagement/Create" class="nav-link">
+                                        <i class="fa-duotone fa-plus nav-icon"></i>
+
+                                        <p>Add Product</p>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+
+
+                        <!-- /.sidebar-menu -->
+</div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div   class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1>@ViewBag.Title</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="~/HomeAdmin">Home</a></li>
+                                <li class="breadcrumb-item active">@ViewBag.Title</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div><!-- /.container-fluid -->
+            </section>
+
+            <!-- Main content -->
+            <section  class="content">
+
+                <!-- Default box -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">@ViewBag.Title</h3>
+                        <div class="content">
+                           
+                        </div>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div style="overflow-y: auto; max-height: 68vh" class="card-body">
+                        @RenderBody()
+                    </div>
+                   
+     
+                </div>
+                
+
+            </section>
+       
+        </div>
+      
+
+        <footer class="main-footer">
+            <div class="float-right d-none d-sm-block">
+                <b>Version</b> 0.1
+            </div>
+            <strong>Copyright &copy; @DateTime.Now.Year E-Project 3 , Group 2 </strong> All rights reserved.
+        </footer>
+
+        
+
+        <aside class="control-sidebar control-sidebar-dark">
+           
+        </aside>
+        
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.sidebarBTN').click(function () {
+                $('body').toggleClass('sidebar-collapse');
+            })
+            $('.producmn').click(function () {
+                $('.subproduct').slideToggle();
+                
+            })
+        })
+    </script>
+</body>
+
+</html>

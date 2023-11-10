@@ -1,0 +1,96 @@
+﻿@model RockParadise.Models.account
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<link href="~/Content/StyleForClient/StyleDetailUser.css" rel="stylesheet" />
+
+
+<div class="userdetail">
+    <div class="menu">
+        <h3>Menu</h3>
+        <ul>
+            <li><a class="menu_detail_user" href="/Account/Details""><i class="fa-solid fa-user"></i> Account information</a></li>
+            <li><a class="menu_detail_user" href="/Account/ChangePassword""><i class="fa-solid fa-lock"></i> Change Password</a></li>
+            <li><a class="menu_detail_user" href="/Cart/Index""><i class="fa-solid fa-cart-shopping"></i> Cart</a></li>
+            <li><a class="menu_detail_user" href="/MyPurchase/Index""><i class="fa-solid fa-calendar-days"></i> My Purchase</a></li>
+        </ul>
+    </div>
+    <div class="info">
+        <h3>Account information</h3>
+        <div id="forminfo">
+            <label for="username">Username</label>
+            <div><input type="text" id="username" disabled name="username" value="@Model.username"></div>
+
+            <label for="role">Role</label>
+            <div><input type="text" id="role" disabled name="role" value="@Model.role"></div>
+
+            <label for="fullname">Fullname</label>
+            <div><input type="text" id="fullname" disabled name="fullname" value="@Model.fullname"><i class="iconedit fa-solid fa-pen-to-square"></i></div>
+
+
+            <label for="email">Email</label>
+            <div><input disabled type="email" id="email" name="email" value="@Model.email"><i class="iconedit fa-solid fa-pen-to-square"></i></div>
+
+            <label for="address">Address</label>
+            <div> <input disabled type="text" id="address" name="address" value="@Model.address"><i class="iconedit fa-solid fa-pen-to-square"></i> </div>
+
+
+            <label for="created-at">Created At</label>
+            <div> <input disabled type="text" id="created-at" name="created-at" value="@Model.created_at"></div>
+
+
+            <input onclick="editinfo()" type="button" value="Save">
+        </div>
+    </div>
+</div>
+
+<script>
+    const editButtons = document.querySelectorAll('.fa-pen-to-square');
+    editButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const input = button.parentNode.querySelector('input');
+            input.removeAttribute('disabled');
+        });
+    });
+    function editinfo() {
+        const fullname = $('#fullname').val();
+        const email = $('#email').val();
+        const address = $('#address').val();
+
+        // Gửi dữ liệu bằng AJAX
+        $.ajax({
+            type: 'POST',
+            url: '/Account/UpdateInfo',
+            data: { fullname: fullname, email: email, address: address },
+            success: function (result) {
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Successfully updated',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    // Disable lại các input
+                    $('#fullname, #email, #address').attr('disabled', true);
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: result.message
+                    });
+                }
+            },
+            error: function (xhr) {
+                // xử lý lỗi ở đây
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi',
+                    text: xhr.responseJSON.message
+                });
+            }
+        });
+    };
+
+</script>

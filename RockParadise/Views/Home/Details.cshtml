@@ -1,0 +1,91 @@
+﻿@model RockParadise.Models.product
+
+@{
+    ViewBag.Title = "Details Product";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<link href="~/Content/StyleForClient/cssdetailproduct.css" rel="stylesheet" />
+
+
+
+<div class="container">
+    <div class="product mainproduc">
+        <div class="product-image">
+            <img src="~/Home/ShowImage/@Html.DisplayFor(model => model.id)"
+                 alt="Product Image">
+        </div>
+        <div class="product-details">
+            <h1 class="product-title"> @Html.DisplayFor(model => model.name) </h1>
+
+            @{
+                float price = (float)Model.price;
+                float discount = 0;
+
+                if (Model.discount == null)
+                {
+                    discount = 0;
+                }
+                else
+                {
+                    discount = (float)Model.discount;
+
+                }
+                float giasaukhigiam = price - (price * (discount / 100));
+                <p class="product-price"><span class="original-price">$@Html.DisplayFor(model => model.price)</span> $@giasaukhigiam (@Model.discount% SALE)</p>
+            }
+
+            <div class="product-quantity">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" value="1" min="1">
+            </div>
+            <button type="button" class="add-to-cart" onclick="addToCart()"><i class="fa-solid fa-cart-plus"></i> Add to cart</button>
+            <p class="product-description">@Html.Raw(Model.info) </p>
+        </div>
+    </div>
+</div>
+
+
+
+<input type="hidden" id="productId" name="productId" value="@Model.id" />
+<input type="hidden" id="quantity" name="quantity" value="1" />
+
+
+
+<script>
+    function addToCart() {
+        let quantity = parseInt(document.getElementById("quantity").value);
+        if (isNaN(quantity) || quantity < 1) {
+            alert("Vui lòng nhập số lượng sản phẩm hợp lệ");
+            return;
+        }
+
+        let productId = parseInt(document.getElementById("productId").value);
+
+        $.ajax({
+            url: "/Cart/AddToCart",
+            type: "POST",
+            data: { productId: productId, quantity: quantity },
+            success: function (result) {
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Added to cart',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: result.message
+                    });
+                }
+            },
+            error: function (error) {
+                // xử lý lỗi ở đây
+                alert(error.responseJSON.message);
+            }
+        });
+    }
+</script>

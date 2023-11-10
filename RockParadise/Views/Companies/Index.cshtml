@@ -1,0 +1,46 @@
+﻿@model IEnumerable<RockParadise.Models.company>
+
+@{
+    ViewBag.Title = "Company Manger";
+    Layout = "~/Views/Shared/_LayoutForAdmin.cshtml";
+}
+<p>
+    <i class="fa-solid fa-plus"></i>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            ID
+        </th>
+        <th>
+            Name
+        </th>
+        <th>
+            Creat At
+        </th>
+        <th>
+            Acction
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.id)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.name)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.created_at)
+    </td>
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+        @Html.ActionLink("Details", "Details", new { id = item.id }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.id })
+    </td>
+</tr>
+}
+
+</table>

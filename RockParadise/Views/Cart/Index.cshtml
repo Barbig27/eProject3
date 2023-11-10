@@ -1,0 +1,232 @@
+﻿@model IEnumerable<RockParadise.Models.cart>
+
+@{
+    ViewBag.Title = "Cart";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+<link href="~/Content/StyleForClient/CartCSS.css" rel="stylesheet" />
+
+
+
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            
+            <th>Name product</th>
+            <th>Price</th>
+            <th>Number of</th>
+            <th>Total<th>
+<th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr id=@item.id>
+            <td ><input type="checkbox" class="select-product"></td>
+
+            <td><Img src="~/Home/ShowImage/@item.product.id" width="100px"></img> <p id="name-product">@Html.DisplayFor(modelItem => item.product.name)</p></td>
+            @{
+                float price = (float)item.product.price;
+                float discount = 0;
+
+                if (item.product.discount == null)
+                {
+                    discount = 0;
+                }
+                else
+                {
+                    discount = (float)item.product.discount;
+                }
+                float giasaukhigiam = price - (price * (discount / 100));
+                <td id="giasaukhigiam">@giasaukhigiam</td>
+                float soluong = (float)item.number_of;
+                float tong = giasaukhigiam * soluong;
+
+                <td><input id="quantity" type="number" min="1" value=@item.number_of class="quantity"></td>
+                <td id="total-price" class="total-price">$ @tong</td>
+            }
+            <td><button type="button" onclick="adelete(@item.id)" class="remove-product">Delete</button></td> 
+        </tr>
+        }
+        </tbody>
+</table>
+
+<div class="total">
+    <div class="total-price-label">Total:</div>
+    <div class="total-price-value">$ 0</div>
+    <button onclick="buy()" class="checkout">Buy</button>
+</div>
+
+<script>
+    function buy() {
+        // Lấy tất cả các sản phẩm đã chọn
+        const checkedProducts = document.querySelectorAll('.select-product:checked');
+
+        // Tạo một mảng chứa thông tin sản phẩm được chọn
+        const products = [];
+        checkedProducts.forEach((checkbox) => {
+            const tr = checkbox.parentElement.parentElement;
+            const id = tr.id;
+            const name = tr.querySelector('#name-product').textContent;
+            const price = tr.querySelector('#giasaukhigiam').textContent.replace('$ ', '');
+            const quantity = tr.querySelector('.quantity').value;
+            const totalPrice = tr.querySelector('.total-price').textContent.replace('$ ', '');
+            const product = {
+                id: id,
+                name: name,
+                price: price,
+                quantity: quantity,
+                totalPrice: totalPrice
+            };
+            
+            products.push(product);
+        });
+
+        // Tính tổng giá trị của các sản phẩm được chọn
+        let totalPrice = 0;
+        products.forEach((product) => {
+            totalPrice += parseFloat(priceToNumber(product.totalPrice));
+        });
+
+        // Tạo chuỗi JSON chứa thông tin sản phẩm được chọn
+        const json = JSON.stringify(products);
+
+        // Thực hiện yêu cầu AJAX POST đến controller
+        $.ajax({
+            url: '/cart/BuyProduct',
+            type: 'POST',
+            data: { products: json, totalPrice: totalPrice  },
+            success: function (result) {
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Ordered',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: result.message
+                    });
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+
+
+
+    function adelete(a) {
+        let id = parseInt(a)
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                $.ajax({
+                    url: "/Cart/DeleteCart",
+                    type: "POST",
+                    data: { id: id },
+                    success: function (result) {
+                        if (result.success) {
+                            Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            );
+                            var row = document.getElementById(id);
+                            row.remove();
+                            updateTotalPrice();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.message
+                            });
+                        }
+                    },
+
+                    error: function (error) {
+                        alert(error.responseJSON.message);
+                    }
+                });
+
+            }
+        });
+    }
+
+
+        // Lấy tất cả các ô nhập số lượng và lắng nghe sự kiện onchange trên chúng
+        const quantityInputs = document.querySelectorAll('.quantity');
+        quantityInputs.forEach((input) => {
+            input.addEventListener('change', calculateProductTotal);
+        });
+
+        // Lấy tất cả các ô chọn sản phẩm và lắng nghe sự kiện onchange trên chúng
+        const productCheckboxes = document.querySelectorAll('.select-product');
+        productCheckboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', updateTotalPrice);
+        });
+
+        // Hàm tính giá trị của một sản phẩm và cập nhật ô "Thành tiền" tương ứng
+        function calculateProductTotal(event) {
+            const input = event.target;
+            const tr = input.parentElement.parentElement;
+            const price = tr.querySelector('td:nth-child(3)').textContent;
+            const quantity = input.value;
+            const totalPrice = priceToNumber(price) * quantity;
+            tr.querySelector('.total-price').textContent = numberToPrice(totalPrice);
+
+            updateTotalPrice();
+        }
+
+        // Hàm cập nhật tổng giá trị của tất cả các sản phẩm được chọn
+        function updateTotalPrice() {
+            let totalPrice = 0;
+            const checkedProducts = document.querySelectorAll('.select-product:checked');
+            checkedProducts.forEach((checkbox) => {
+                const tr = checkbox.parentElement.parentElement;
+                const price = tr.querySelector('td:nth-child(3)').textContent;
+                const quantity = tr.querySelector('.quantity').value;
+                const productTotalPrice = priceToNumber(price) * quantity;
+                totalPrice += productTotalPrice;
+            });
+
+            const totalValue = document.querySelector('.total-price-value');
+            totalValue.textContent = numberToPrice(totalPrice);
+        }
+
+        // Hàm chuyển đổi giá từ chuỗi sang số
+        function priceToNumber(priceString) {
+            const priceNumber = Number(priceString.replace(/[^0-9.-]+/g, ''));
+            return priceNumber;
+        }
+
+        // Hàm chuyển đổi giá từ số sang chuỗi định dạng giá tiền
+        function numberToPrice(priceNumber) {
+            const priceString = priceNumber.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+            return priceString;
+        }
+
+   
+
+
+
+
+
+</script>

@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutForAdmin.cshtml";
+}
+
+<style>
+    .maindash {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        height: auto;
+        background-color: #fff;
+    }
+
+    .total {
+        font-size: 3em;
+        font-weight: bold;
+    }
+
+    .total-label {
+        text-transform: uppercase;
+        font-size: 1em;
+        color: #888;
+    }
+
+    .account i {
+        font-size: 20px;
+        color: #4CAF50;
+    }
+
+    .orders i {
+        font-size: 20px;
+        color: #2196F3;
+    }
+
+    .products i {
+        font-size: 20px;
+        color: #FF5722;
+    }
+
+    .account .total-label {
+        color: #4CAF50;
+    }
+
+    .orders .total-label {
+        color: #2196F3;
+    }
+
+    .products .total-label {
+        color: #FF5722;
+    }
+</style>
+<div class="maindash">
+    <div class="account">
+        <i class="fas fa-user"></i>
+        <div class="total">@ViewBag.totala</div>
+        <div class="total-label">TOTAL ACCOUNTS</div>
+    </div>
+    <div class="orders">
+        <i class="fas fa-shopping-cart"></i>
+        <div class="total">@ViewBag.totalo</div>
+        <div class="total-label">Total order</div>
+    </div>
+    <div class="products">
+        <i class="fas fa-box"></i>
+        <div class="total">@ViewBag.totalp</div>
+        <div class="total-label">Total Product</div>
+    </div>
+</div>
